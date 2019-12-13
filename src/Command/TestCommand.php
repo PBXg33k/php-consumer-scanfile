@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Company;
+use App\Service\FileScanService;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -15,14 +16,9 @@ class TestCommand extends Command
     protected static $defaultName = 'app:test';
 
     /**
-     * @var MediaProcessorService
+     * @var FileScanService
      */
-    private $mediaProcessorService;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private $fileScanService;
 
     /**
      * @var LoggerInterface
@@ -30,13 +26,11 @@ class TestCommand extends Command
     private $logger;
 
     public function __construct(
-        MediaProcessorService $mediaProcessorService,
-        EntityManagerInterface $entityManager,
         LoggerInterface $logger,
+        FileScanService $fileScanService,
         ?string $name = null
     ) {
-        $this->mediaProcessorService = $mediaProcessorService;
-        $this->entityManager = $entityManager;
+        $this->fileScanService = $fileScanService;
         $this->logger = $logger;
         parent::__construct($name);
     }
@@ -48,13 +42,10 @@ class TestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $entity = new Company();
-        $entity->setId(1);
-        $entity->setName('test');
+        $this->fileScanService->handle('/media');
 
-        $encoded = json_encode($entity);
-        $decoded = (new Company())->hydrateClass(json_decode($encoded));
+        var_dump($this->fileScanService->getTypes());
 
-        var_dump($entity, $encoded, $decoded);
+        return 0;
     }
 }
