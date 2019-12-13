@@ -1,11 +1,5 @@
-FROM pbxg33k/php-consumer-base AS base
+FROM pbxg33k/php-consumer-base
 MAINTAINER Oguzhan Uysal <development@oguzhanuysal.eu>
-
-RUN docker-php-ext-install pcntl
-RUN apk add --no-cache --update ffmpeg
-
-FROM base AS final
-WORKDIR /var/www
 
 COPY . /var/www
 WORKDIR /var/www
