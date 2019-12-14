@@ -61,7 +61,7 @@ class FileScanService
 
     public function processFile(string $path)
     {
-        if(strpos(mime_content_type($path), 'video') !== false) {
+        if(is_readable($path) && strpos(mime_content_type($path), 'video') !== false) {
             $this->messageBus->dispatch(new CheckVideoMessage($path));
         }
     }
